@@ -1,0 +1,136 @@
+# Book Class (Superclass)
+class Book:
+    def __init__(self, title, author, isbn):
+        self.__title = title
+        self.__author = author
+        self.__isbn = isbn
+
+    # Getter Methods
+    def get_title(self):
+        return self.__title
+
+    def get_author(self):
+        return self.__author
+
+    def get_isbn(self):
+        return self.__isbn
+
+    # Display book information
+    def display_info(self):
+        print(f"Title: {self.__title}")
+        print(f"Author: {self.__author}")
+        print(f"ISBN: {self.__isbn}")
+
+    # Abstract method (to be overridden by subclasses)
+    def get_book_type(self):
+        raise NotImplementedError("Subclasses should implement this method.")
+
+# FictionBook Class (Subclass)
+class FictionBook(Book):
+    def __init__(self, title, author, isbn, genre):
+        super().__init__(title, author, isbn)
+        self.__genre = genre
+
+    # Getter and Setter Methods
+    def get_genre(self):
+        return self.__genre
+
+    def set_genre(self, genre):
+        self.__genre = genre
+
+    # Overriding display_info method
+    def display_info(self):
+        super().display_info()
+        print(f"Genre: {self.__genre}")
+
+    # Implementing abstract method
+    def get_book_type(self):
+        return "Fiction"
+
+# NonFictionBook Class (Subclass)
+class NonFictionBook(Book):
+    def __init__(self, title, author, isbn, subject):
+        super().__init__(title, author, isbn)
+        self.__subject = subject
+
+    # Getter and Setter Methods
+    def get_subject(self):
+        return self.__subject
+
+    def set_subject(self, subject):
+        self.__subject = subject
+
+    # Overriding display_info method
+    def display_info(self):
+        super().display_info()
+        print(f"Subject: {self.__subject}")
+
+    # Implementing abstract method
+    def get_book_type(self):
+        return "Non-Fiction"
+
+# Library Class
+class Library:
+    def __init__(self):
+        self.__books = []
+
+    def add_book(self, book):
+        if isinstance(book, Book):
+            self.__books.append(book)
+        else:
+            print("Invalid book.")
+
+    def remove_book(self, isbn):
+        for book in self.__books:
+            if book.get_isbn() == isbn:
+                self.__books.remove(book)
+                print(f"Book with ISBN {isbn} removed.")
+                return
+        print("Book not found.")
+
+    def display_books(self):
+        if not self.__books:
+            print("No books in the library.")
+            return
+        for book in self.__books:
+            book.display_info()
+            print()
+
+    def search_by_author(self, author):
+        found = False
+        for book in self.__books:
+            if book.get_author() == author:
+                book.display_info()
+                print()
+                found = True
+        if not found:
+            print("No books found by this author.")
+
+# Main Program
+def main():
+    # Create instances of books
+    fiction1 = FictionBook("1984", "George Orwell", "123456789", "Dystopian")
+    non_fiction1 = NonFictionBook("Sapiens", "Yuval Noah Harari", "987654321", "History")
+
+    # Create a library instance
+    library = Library()
+
+    # Add books to the library
+    library.add_book(fiction1)
+    library.add_book(non_fiction1)
+
+    # Display all books
+    print("All books in the library:")
+    library.display_books()
+
+    # Search for books by author
+    print("Search for books by Yuval Noah Harari:")
+    library.search_by_author("Yuval Noah Harari")
+
+    # Remove a book and display remaining books
+    library.remove_book("123456789")
+    print("All books in the library after removal:")
+    library.display_books()
+
+if __name__ == "__main__":
+    main()
